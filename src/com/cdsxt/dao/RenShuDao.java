@@ -23,7 +23,7 @@ public class RenShuDao {
 		List<RenShu>renList=new ArrayList<RenShu>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,count(*) from xmm b,xm x where b.zid=x.zid GROUP BY b.zid");
+			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,count(*) from xmm b,xm x,resident r where b.zid=x.zid and b.idNum=r.idNum GROUP BY b.zid");
 			rs=ps.executeQuery();
 			while(rs.next()){
 				String pname=rs.getString(1);
@@ -80,7 +80,7 @@ public class RenShuDao {
 		List<ZongJinE> zongList=new ArrayList<ZongJinE>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,sum(b.price) price from xmm b,xm x where b.zid=x.zid GROUP BY b.zid ");
+			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,sum(x.unitp*b.number) price from xmm b,xm x where b.zid=x.zid GROUP BY b.zid ");
 			rs=ps.executeQuery();
 			while(rs.next()){
 				String pname=rs.getString(1);
@@ -106,7 +106,7 @@ public class RenShuDao {
 		List<FeiYong> feiList=new ArrayList<FeiYong>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("select x.pname,x.unit,x.unitp,m.number,m.price,r.`name` from xmm m,xm x,resident r where m.zid=x.zid and r.idNum=m.idNum and x.pname=? limit ?,?");
+			ps=(PreparedStatement) conn.prepareStatement("select x.pname,x.unit,x.unitp,m.number,r.`name` from xmm m,xm x,resident r where m.zid=x.zid and r.idNum=m.idNum and x.pname=? limit ?,?");
 			ps.setString(1, pname);
 			ps.setInt(2, startRow);
 			ps.setInt(3, pageRow);
@@ -115,9 +115,8 @@ public class RenShuDao {
 				String unit=rs.getString("unit");
 				String unitp=rs.getString("unitp");
 				int number=rs.getInt("number");
-				float price=rs.getFloat("price");
 				String name=rs.getString("name");
-				feiList.add(new FeiYong(pname, unit, unitp, number, price, name));
+				feiList.add(new FeiYong(pname, unit, unitp, number, name));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,7 +164,7 @@ public class RenShuDao {
 		ResultSet rs=null;
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareCall("select count(*) from xmm m,xm x where m.zid=x.zid and x.pname=?");
+			ps=(PreparedStatement) conn.prepareCall("select count(*) from xmm m,xm x,resident r where m.zid=x.zid and r.idNum=m.idNum and x.pname=?");
 			ps.setString(1, pname);
 			rs=ps.executeQuery();
 			while(rs.next()){

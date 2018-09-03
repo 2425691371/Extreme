@@ -10,9 +10,12 @@ public class Test {
 		/*for(int i = 1;i<=100;i++){
 			BaseDao.changePos("insert into admin(uname,password,phone,emal) values(?,?,?,?)", "zhangsan"+i,"123456","12345678978","a@qq.com");
 		}*/
-		for(int i = 12;i<=100;i++){
-			test(18,"13123");
-//			test((int)(Math.random()*10+1),10,1232,"员工"+i);
+//		for(int i = 12;i<=100;i++){
+//			test(18,"13123");
+////			test((int)(Math.random()*10+1),10,1232,"员工"+i);
+//		}
+		for(int i=6;i<=62;i++) {			
+			test1(i);
 		}
 	}
 	public static void test(int age,String sfid){
@@ -27,6 +30,18 @@ public class Test {
 //			ps.setInt(2, number);
 //			ps.setFloat(3, price);
 //			ps.setString(4, name);
+			ps.execute();
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		
+	}
+	public static void test1(int i) {
+		Connection conn=null;
+		PreparedStatement ps=null;
+		try {
+			conn=(Connection) DBUtil.getConn();
+			ps=(PreparedStatement) conn.prepareStatement("update xmm set idNum=(RAND()*(22-3)+3) where xmm_id="+i);
 			ps.execute();
 		} catch (Exception e) {
 			e.printStackTrace();
