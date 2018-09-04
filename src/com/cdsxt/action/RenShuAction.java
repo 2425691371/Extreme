@@ -88,7 +88,9 @@ public class RenShuAction extends HttpServlet {
 		PageUtil page=new PageUtil(count, curPage);
 		int startRow=page.getStartRow();
 		int pageRow=page.getPageRow();
+		List<Xm> xmList=renShuDao.queryQuanXian();
 		List<FeiYong> feiList=renShuDao.queryFeiYong(pname,startRow,pageRow);
+		request.setAttribute("xmList", xmList);
 		request.setAttribute("feiList", feiList);
 		request.setAttribute("page", page);
 		request.getRequestDispatcher("/bcc/query.jsp").forward(request, response);

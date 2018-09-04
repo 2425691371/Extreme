@@ -14,8 +14,8 @@ public class Test {
 //			test(18,"13123");
 ////			test((int)(Math.random()*10+1),10,1232,"员工"+i);
 //		}
-		for(int i=6;i<=62;i++) {			
-			test1(i);
+		for(int i=1;i<=100;i++) {			
+			test1();
 		}
 	}
 	public static void test(int age,String sfid){
@@ -36,12 +36,13 @@ public class Test {
 		}
 		
 	}
-	public static void test1(int i) {
+	public static void test1() {
 		Connection conn=null;
 		PreparedStatement ps=null;
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("update xmm set idNum=(RAND()*(22-3)+3) where xmm_id="+i);
+//			ps=(PreparedStatement) conn.prepareStatement("update xmm set idNum=(RAND()*(22-3)+3) where xmm_id="+i);
+			ps=(PreparedStatement) conn.prepareStatement("insert into xmm_resident(xmm_id,idNum) VALUES(RAND()*(62-3)+3,RAND()*(22-3)+3)");
 			ps.execute();
 		} catch (Exception e) {
 			e.printStackTrace();

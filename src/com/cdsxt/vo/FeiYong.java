@@ -11,7 +11,7 @@ public class FeiYong {
 		// TODO Auto-generated constructor stub
 	}
 	public FeiYong(String pname, String unit, String unitp, int number, String name) {
-		super();
+//		super();
 		this.pname = pname;
 		this.unit = unit;
 		this.unitp = unitp;
