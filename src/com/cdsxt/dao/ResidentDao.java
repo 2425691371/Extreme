@@ -399,7 +399,7 @@ public class ResidentDao {
 			List<ResiAge> list=new ArrayList<ResiAge>();
 			try {
 				Class.forName("com.mysql.jdbc.Driver");
-				conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/test","root","root");
+				conn=DriverManager.getConnection("jdbc:mysql://localhost:3306/test?useUnicode=true&characterEncoding=utf-8","root","root");
 				String sql="select '0-10岁' agearea ,count(*) count from resident e1 where e1.age>=0 and e1.age<=10 "+
 							"union all "+
 							"select '11-20岁' agearea ,count(*) count from resident e1 where e1.age>=11 and e1.age<=20 "+
@@ -412,7 +412,7 @@ public class ResidentDao {
 							"union all "+
 							"select '51-60岁' agearea ,count(*) count from resident e1 where e1.age>=51 and e1.age<=60 "+
 							"union all "+
-							"select '60以上岁' agearea ,count(*) count  from resident e1 where e1.age>=61 and e1.age<=150 ";
+							"select '60岁及以上' agearea ,count(*) count  from resident e1 where e1.age>=61 and e1.age<=150 ";
 							
 				ps=conn.prepareStatement(sql);
 				rs=ps.executeQuery();

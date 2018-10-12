@@ -23,7 +23,7 @@ public class RenShuDao {
 		List<RenShu>renList=new ArrayList<RenShu>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,count(*) from xmm b,xm x where b.zid=x.zid GROUP BY b.zid");
+			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,count(*) from xm x,resident r LEFT JOIN xmm_resident xs on xs.idNum=r.idNum LEFT JOIN xmm m on m.xmm_id=xs.xmm_id where m.zid=x.zid GROUP BY m.zid");
 			rs=ps.executeQuery();
 			while(rs.next()){
 				String pname=rs.getString(1);
@@ -49,7 +49,7 @@ public class RenShuDao {
 		List<Shu> renList=new ArrayList<Shu>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("select r.idNum,r.`name`,r.age,r.idCard from xmm m,resident r,xm x where m.idNum=r.idNum and m.zid=x.zid and x.pname=? limit ?,?");
+			ps=(PreparedStatement) conn.prepareStatement("select r.idNum,r.`name`,r.age,r.idCard from xm x,resident r LEFT JOIN xmm_resident xs on xs.idNum=r.idNum LEFT JOIN xmm m on m.xmm_id=xs.xmm_id where m.zid=x.zid and x.pname=? limit ?,?");
 			ps.setString(1, pname);
 			ps.setInt(2, startRow);
 			ps.setInt(3, pageRow);
@@ -80,7 +80,8 @@ public class RenShuDao {
 		List<ZongJinE> zongList=new ArrayList<ZongJinE>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("SELECT x.pname,sum(b.price) price from xmm b,xm x where b.zid=x.zid GROUP BY b.zid ");
+			ps=(PreparedStatement) conn.prepareStatement("select x.pname,sum(x.unitp*m.number) price " + 
+					"from xm x,resident r LEFT JOIN xmm_resident xs on xs.idNum=r.idNum LEFT JOIN xmm m on m.xmm_id=xs.xmm_id where m.zid=x.zid GROUP BY m.zid ");
 			rs=ps.executeQuery();
 			while(rs.next()){
 				String pname=rs.getString(1);
@@ -106,7 +107,8 @@ public class RenShuDao {
 		List<FeiYong> feiList=new ArrayList<FeiYong>();
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareStatement("select x.pname,x.unit,x.unitp,m.number,m.price,r.`name` from xmm m,xm x,resident r where m.zid=x.zid and r.idNum=m.idNum and x.pname=? limit ?,?");
+			ps=(PreparedStatement) conn.prepareStatement("select x.pname,x.unit,x.unitp,m.number,r.`name` " + 
+					"from xm x,resident r LEFT JOIN xmm_resident xs on xs.idNum=r.idNum LEFT JOIN xmm m on m.xmm_id=xs.xmm_id where m.zid=x.zid and x.pname=? limit ?,?");
 			ps.setString(1, pname);
 			ps.setInt(2, startRow);
 			ps.setInt(3, pageRow);
@@ -115,9 +117,8 @@ public class RenShuDao {
 				String unit=rs.getString("unit");
 				String unitp=rs.getString("unitp");
 				int number=rs.getInt("number");
-				float price=rs.getFloat("price");
 				String name=rs.getString("name");
-				feiList.add(new FeiYong(pname, unit, unitp, number, price, name));
+				feiList.add(new FeiYong(pname, unit, unitp, number, name));
 			}
 		} catch (Exception e) {
 			e.printStackTrace();
@@ -165,7 +166,8 @@ public class RenShuDao {
 		ResultSet rs=null;
 		try {
 			conn=(Connection) DBUtil.getConn();
-			ps=(PreparedStatement) conn.prepareCall("select count(*) from xmm m,xm x where m.zid=x.zid and x.pname=?");
+			ps=(PreparedStatement) conn.prepareCall("select count(*) " + 
+					"from xm x,resident r LEFT JOIN xmm_resident xs on xs.idNum=r.idNum LEFT JOIN xmm m on m.xmm_id=xs.xmm_id where m.zid=x.zid and x.pname=?");
 			ps.setString(1, pname);
 			rs=ps.executeQuery();
 			while(rs.next()){

@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-<%@taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
@@ -81,7 +82,7 @@ a:active {
 	            <td height="18" bgcolor="#FFFFFF"><div align="center" ><a href="#">${fei.unitp }</a></div></td>
 	            <td height="18" bgcolor="#FFFFFF"><div align="center" ><a href="#">${fei.unit }</a></div></td>
 	            <td height="18" bgcolor="#FFFFFF"><div align="center" ><a href="#">${fei.number }</a></div></td>
-	            <td height="18" bgcolor="#FFFFFF"><div align="center" ><a href="#">${fei.price }</a></div></td>
+	            <td height="18" bgcolor="#FFFFFF"><div align="center" ><a href="#">${fn:substringBefore(fei.unitp, '元')*fei.number }元</a></div></td>
 	            <td height="18" bgcolor="#FFFFFF"><div align="center" ><a href="#">${fei.name }</a></div></td>
 	          </tr>
           </c:forEach>
