@@ -36,7 +36,7 @@ import org.apache.commons.fileupload.disk.DiskFileItemFactory;
 import org.apache.commons.fileupload.servlet.ServletFileUpload;
 import org.omg.CORBA.portable.OutputStream;
 
-import com.cdsxt.po.Admin;
+import com.cdsxt.po.Manager;
 import com.cdsxt.util.BaseDao;
 import com.cdsxt.util.DbBackUpMethod;
 import com.cdsxt.util.Delete;
@@ -424,7 +424,7 @@ public class AdminServlet extends HttpServlet {
 }
 	public void jumpuppwd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String uid = request.getParameter("uid");
-		Admin admin = BaseDao.queryById("select * from admin where uid=?",Admin.class, Integer.parseInt(uid));
+		Manager admin = BaseDao.queryById("select * from manager where id=?",Manager.class, Integer.parseInt(uid));
 		request.setAttribute("admin", admin);
 		String page = request.getParameter("page");
 		request.setAttribute("xxxpage", page);
@@ -433,7 +433,7 @@ public class AdminServlet extends HttpServlet {
 	public void upthispwd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String uname =request.getParameter("uname");
 		String pwd = request.getParameter("pwd");
-		BaseDao.changePos("update admin set password=? where uname=?",pwd,uname );	
+		BaseDao.changePos("update manager set pwd=? where uname=?",pwd,uname );	
 		request.getRequestDispatcher("/main.jsp").forward(request, response);
 }
 	public void uppwd(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
@@ -441,13 +441,13 @@ public class AdminServlet extends HttpServlet {
 		String pwd = request.getParameter("pwd");
 		String courpage = request.getParameter("courpage");
 		System.out.println(courpage);
-		BaseDao.changePos("update admin set password=? where uid=?",pwd,uid );	
+		BaseDao.changePos("update manager set pwd=? where id=?",pwd,uid );	
 		request.getRequestDispatcher("adminServlet?mark=goquerry&curPage="+courpage).forward(request, response);
 }
 	
 	public void jumpupdata(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String uid = request.getParameter("uid");
-		Admin admin = BaseDao.queryById("select * from admin where uid=?",Admin.class, Integer.parseInt(uid));
+		Manager admin = BaseDao.queryById("select * from manager where id=?",Manager.class, Integer.parseInt(uid));
 		request.setAttribute("admin", admin);
 		String page = request.getParameter("page");
 		request.setAttribute("xxxpage", page);
@@ -460,12 +460,12 @@ public class AdminServlet extends HttpServlet {
 		String emal = request.getParameter("emal");
 		String courpage = request.getParameter("courpage");
 		System.out.println(courpage);
-		BaseDao.changePos("update admin set uname=?,phone=?,emal=? where uid=?",uname,phone,emal,uid );	
+		BaseDao.changePos("update manager set uname=?,phone=?,email=? where id=?",uname,phone,emal,uid );	
 		request.getRequestDispatcher("adminServlet?mark=goquerry&curPage="+courpage).forward(request, response);
 }
 	public void jump(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 		String uname = (String)request.getSession().getAttribute("uname");
-		List<Admin> admin = BaseDao.queryPos("select * from admin where uname=?", Admin.class, uname);
+		List<Manager> admin = BaseDao.queryPos("select * from manager where uname=?", Manager.class, uname);
 		 request.setAttribute("admin",admin.get(0));
          request.getRequestDispatcher("/admin/upthispwd.jsp").forward(request, response);
 }
@@ -476,7 +476,7 @@ public class AdminServlet extends HttpServlet {
 		String[] strarr=str.split(",");
 		int[] arr = new int[strarr.length];
 		for (int i = 0; i < strarr.length; i++) {
-			BaseDao.changePos("delete from admin where uid=?",Integer.parseInt(strarr[i]));
+			BaseDao.changePos("delete from manager where id=?",Integer.parseInt(strarr[i]));
 		}
 	    pw.write("删除成功");
 		pw.close();
@@ -489,7 +489,7 @@ public class AdminServlet extends HttpServlet {
 	}
 	public void goquerry(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
 			//获取总条数
-			int count=BaseDao.queryCount("select count(*) from admin ",null);
+			int count=BaseDao.queryCount("select count(*) from manager ",null);
 			//获取当前页
 			int curPage=request.getParameter("curPage")==null?1:Integer.parseInt(request.getParameter("curPage"));
 			if(curPage>count/10+1){
@@ -501,7 +501,7 @@ public class AdminServlet extends HttpServlet {
 			int startRow=page.getStartRow();
 			int pageRow=page.getPageRow();
 			//查询数据库中的员工信息}
-			List<Admin> empList=BaseDao.queryPos("select * from admin where uname!=? limit ?,?", Admin.class,(String)request.getSession().getAttribute("uname"), startRow, pageRow);
+			List<Manager> empList=BaseDao.queryPos("select * from manager where uname!=? limit ?,?", Manager.class,(String)request.getSession().getAttribute("uname"), startRow, pageRow);
 			request.setAttribute("empList", empList);
 			request.setAttribute("page", page);
 			//请求转发给成功页面 
@@ -513,7 +513,7 @@ public class AdminServlet extends HttpServlet {
 		String phone = request.getParameter("phone");
 		String emal = request.getParameter("emal");
 		PrintWriter pw = response.getWriter();
-		BaseDao.changePos("insert into admin(uname,password,phone,emal) values(?,?,?,?)", uname,pwd,phone,emal);
+		BaseDao.changePos("insert into manager(uname,pwd,phone,email) values(?,?,?,?)", uname,pwd,phone,emal);
 		request.getRequestDispatcher("/main.jsp").forward(request, response);
 		pw.close();
 		
@@ -521,10 +521,10 @@ public class AdminServlet extends HttpServlet {
 		
 	}
 	public void verify(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Admin> list = new ArrayList<Admin>();
+		List<Manager> list = new ArrayList<Manager>();
 		String uname = request.getParameter("uname");
 		PrintWriter pw = response.getWriter();
-		list=BaseDao.queryPos("select * from admin where uname=?", Admin.class,uname);
+		list=BaseDao.queryPos("select * from manager where uname=?", Manager.class,uname);
 		if(list.size()<1){
 			pw.write("nosuccess");
 		}else{
@@ -534,11 +534,11 @@ public class AdminServlet extends HttpServlet {
 		
 	}
 	public void tologin(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		List<Admin> list = new ArrayList<Admin>();
+		List<Manager> list = new ArrayList<Manager>();
 		String uname = request.getParameter("uname");
 		String pwd = request.getParameter("pwd");
 		PrintWriter pw = response.getWriter();
-		list=BaseDao.queryPos("select * from admin where uname=? and password=?", Admin.class,uname,pwd );
+		list=BaseDao.queryPos("select * from manager where uname=? and pwd=?", Manager.class,uname,pwd );
 		if(list.size()<1){
 			pw.write("unsuccess");
 		}else{
